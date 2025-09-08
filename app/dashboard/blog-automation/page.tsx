@@ -15,7 +15,7 @@ export default function BlogAutomationPage() {
   const [image, setImage] = useState<string>("");
 
   const generateCategories = async () => {
-    setSuggestedCategories(["Tech", "Health", "Travel"]);
+    setSuggestedCategories(["Tech", "Health", "Travel", "Lifestyle"]);
   };
 
   const generateTitles = async () => {
@@ -23,6 +23,7 @@ export default function BlogAutomationPage() {
       "The Future of Tech",
       "Healthy Living Tips",
       "Top Travel Destinations",
+      "Exploring the Great Outdoors",
     ]);
   };
 
@@ -60,7 +61,7 @@ export default function BlogAutomationPage() {
                 Get Catagories Suggestions From AI
               </Button>
             </div>
-            <div className=" flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
               {suggestedCategories.map((cat) => (
                 <Button
                   key={cat}
@@ -71,6 +72,45 @@ export default function BlogAutomationPage() {
                 </Button>
               ))}
             </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <div className="flex gap-2">
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter blog title"
+                className=" flex-1"
+              />
+              <Button
+                onClick={generateTitles}
+                variant="outline"
+                className="flex-1"
+              >
+                Get Title Suggestions From AI
+              </Button>
+            </div>
+            {suggestedTitles.length > 0 && (
+              <div className=" mt-2">
+                <Label>Suggested Titles:</Label>
+                <div className=" grid gap-2 mt-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  {suggestedTitles.map((t) => (
+                    <div
+                      key={t}
+                      className={`justify-start p-2 cursor-pointer ${
+                        t === title
+                          ? "border rounded-md bg-black text-white dark:bg-white dark:text-black"
+                          : ""
+                      }`}
+                      onClick={() => setTitle(t)}
+                    >
+                      {t}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
