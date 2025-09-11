@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import MDEditor from "@uiw/react-md-editor";
+import Image from "next/image";
 
 export default function BlogAutomationPage() {
   const [category, setCategory] = useState<string>("");
@@ -34,17 +36,21 @@ export default function BlogAutomationPage() {
   };
 
   const generateImage = async () => {
-    setImage("https://via.placeholder.com/600");
+    setImage("https://placehold.co/600x600/png");
+  };
+
+  const handleSubmit = async () => {
+    console.log({ category, title, content, image });
   };
   return (
     <div>
       <Card className="w-full max-w-6xl mx-auto my-5">
         <CardHeader>
-          <CardTitle>Create a New Blog Post</CardTitle>
+          <CardTitle>สร้างโพสต์</CardTitle>
         </CardHeader>
         <CardContent className=" space-y-6">
           <div className=" space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">หมวดหมู่</Label>
             <div className=" flex gap-2">
               <Input
                 id="category"
@@ -58,7 +64,7 @@ export default function BlogAutomationPage() {
                 variant="outline"
                 className="flex-1"
               >
-                Get Catagories Suggestions From AI
+                รับคำแนะนำหมวดหมู่จาก AI
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -74,7 +80,7 @@ export default function BlogAutomationPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">ชื่อเรื่อง</Label>
             <div className="flex gap-2">
               <Input
                 id="title"
@@ -88,7 +94,7 @@ export default function BlogAutomationPage() {
                 variant="outline"
                 className="flex-1"
               >
-                Get Title Suggestions From AI
+                รับคำแนะนำชื่อเรื่องจาก AI
               </Button>
             </div>
             {suggestedTitles.length > 0 && (
@@ -111,6 +117,53 @@ export default function BlogAutomationPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className=" space-y-2">
+            <Label htmlFor="content">เนื้อหา</Label>
+            <div className=" flex gap-2">
+              <Button
+                onClick={generateContent}
+                variant="outline"
+                className="w-full"
+              >
+                รับคำแนะนำเนื้อหาจาก AI
+              </Button>
+            </div>
+            <div className="pt-5">
+              <MDEditor
+                value={content}
+                onChange={(val) => setContent(val || "")}
+              />
+            </div>
+          </div>
+          <div className=" space-y-2">
+            <Label htmlFor="image">ภาพฟีเจอร์</Label>
+            <div className="flex gap-2 items-center">
+              <Button
+                className="flex-1"
+                onClick={generateImage}
+                variant="outline"
+              >
+                รับคำแนะนำภาพฟีเจอร์จาก AI
+              </Button>
+              {image && (
+                <div className="flex-1">
+                  <Image
+                    src={image}
+                    alt="Feature Image"
+                    width={600}
+                    height={600}
+                    className="mt-2 max-w-full h-auto rounded-md"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Button onClick={handleSubmit} className="flex-1">
+              บันทึกโพสต์
+            </Button>
           </div>
         </CardContent>
       </Card>
