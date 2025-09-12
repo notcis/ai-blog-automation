@@ -42,3 +42,5 @@ npm install @google/genai
 npm install prisma --save-dev
 
 npm i dotenv
+
+npx tsx prisma/seed.ts

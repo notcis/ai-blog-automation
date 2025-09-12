@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import Image from "next/image";
+import { generateContentAi } from "@/actions/googleAi";
+import { BotIcon, Loader2Icon } from "lucide-react";
 
 export default function BlogAutomationPage() {
   const [category, setCategory] = useState<string>("");
@@ -15,9 +17,25 @@ export default function BlogAutomationPage() {
   const [suggestedTitles, setSuggestedTitles] = useState<string[]>([]);
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<string>("");
+  const [loading, setLoading] = useState<{ name: string; status: boolean }>({
+    name: "",
+    status: false,
+  });
 
   const generateCategories = async () => {
-    setSuggestedCategories(["Tech", "Health", "Travel", "Lifestyle"]);
+    //setSuggestedCategories(["Tech", "Health", "Travel", "Lifestyle"]);
+    setLoading({ name: "categories", status: true });
+
+    try {
+      const { categories } = await generateContentAi(
+        `Suggest 10 of the most popular and relevant categories for the blogging application. Please return the response in JSON format like this:  { "categories": ["เทคโนโลยี", "สุขภาพ", "การเดินทาง"] } in Thai language.`
+      );
+      setSuggestedCategories(categories || []);
+    } catch (error) {
+      console.log("Error generating categories:", error);
+    } finally {
+      setLoading({ name: "categories", status: false });
+    }
   };
 
   const generateTitles = async () => {
@@ -56,14 +74,20 @@ export default function BlogAutomationPage() {
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                placeholder="Enter category name"
+                placeholder=""
                 className=" flex-1"
               />
               <Button
                 onClick={generateCategories}
                 variant="outline"
                 className="flex-1"
+                disabled={loading.status && loading.name === "categories"}
               >
+                {loading.status && loading.name === "categories" ? (
+                  <Loader2Icon className="animate-spin h-5 w-5" />
+                ) : (
+                  <BotIcon className="h-5 w-5" />
+                )}
                 รับคำแนะนำหมวดหมู่จาก AI
               </Button>
             </div>
