@@ -9,6 +9,7 @@ import MDEditor from "@uiw/react-md-editor";
 import Image from "next/image";
 import { generateContentAi } from "@/actions/googleAi";
 import { BotIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 
 export default function BlogAutomationPage() {
   const [category, setCategory] = useState<string>("");
@@ -23,12 +24,12 @@ export default function BlogAutomationPage() {
   });
 
   const generateCategories = async () => {
-    //setSuggestedCategories(["Tech", "Health", "Travel", "Lifestyle"]);
     setLoading({ name: "categories", status: true });
 
     try {
       const { categories } = await generateContentAi(
-        `Suggest 10 of the most popular and relevant categories for the blogging application. Please return the response in JSON format like this:  { "categories": ["เทคโนโลยี", "สุขภาพ", "การเดินทาง"] } in Thai language.`
+        `Suggest 10 of the most popular and relevant categories for the blogging application. 
+        Please return the response in JSON format like this:  { "categories": ["เทคโนโลยี", "สุขภาพ", "การเดินทาง"] } in Thai language.`
       );
       setSuggestedCategories(categories || []);
     } catch (error) {
@@ -39,18 +40,49 @@ export default function BlogAutomationPage() {
   };
 
   const generateTitles = async () => {
-    setSuggestedTitles([
-      "The Future of Tech",
-      "Healthy Living Tips",
-      "Top Travel Destinations",
-      "Exploring the Great Outdoors",
-    ]);
+    if (!category) {
+      toast.error("กรุณาเลือกหมวดหมู่ก่อน");
+      return;
+    }
+
+    setLoading({ name: "titles", status: true });
+    try {
+      const { titles } = await generateContentAi(
+        ` Suggest 3 SEO-optimized blog post titles for the category ${category}.
+          The titles should be catchy, relevant and designed to attract traffic.
+          Please return the response in JSON format like this:  { "titles": ["The Future of AI", "10 Tips for Healthy Living"] } in Thai language.`
+      );
+      setSuggestedTitles(titles || []);
+    } catch (error) {
+      console.log("Error generating titles:", error);
+    } finally {
+      setLoading({ name: "titles", status: false });
+    }
   };
 
   const generateContent = async () => {
-    setContent(
-      "This is a sample blog content generated for the selected title."
-    );
+    if (!title) {
+      toast.error("กรุณาใส่ชื่อเรื่องก่อน");
+      return;
+    }
+    setLoading({ name: "content", status: true });
+    try {
+      const { content } = await generateContentAi(
+        ` Generate an SEO-optimized blog post for the topic: "${title}".
+          The post should be written in a clear, easy-to-understand
+          language suitable for broad audience. Ensure the content
+          is human-friendly and engaging while incorporating relevant
+          SEO keywords. Please return the response in JSON format like this:  { "content": "Your blog post content goes here..." } in Thai language.
+          Content must be written in semantic HTML format including multiple headings, bullet points, paragraphs, etc but exclude <DOCTYPE> <html> <head> <header> <meta> section and use <code> blocks as needed only.
+          Include summary section at the end of the content but do not include keywords: section at the end.
+        `
+      );
+      setContent(content || "");
+    } catch (error) {
+      console.log("Error generating content:", error);
+    } finally {
+      setLoading({ name: "content", status: false });
+    }
   };
 
   const generateImage = async () => {
@@ -117,7 +149,13 @@ export default function BlogAutomationPage() {
                 onClick={generateTitles}
                 variant="outline"
                 className="flex-1"
+                disabled={loading.status && loading.name === "titles"}
               >
+                {loading.status && loading.name === "titles" ? (
+                  <Loader2Icon className="animate-spin h-5 w-5" />
+                ) : (
+                  <BotIcon className="h-5 w-5" />
+                )}
                 รับคำแนะนำชื่อเรื่องจาก AI
               </Button>
             </div>
@@ -150,7 +188,13 @@ export default function BlogAutomationPage() {
                 onClick={generateContent}
                 variant="outline"
                 className="w-full"
+                disabled={loading.status && loading.name === "content"}
               >
+                {loading.status && loading.name === "content" ? (
+                  <Loader2Icon className="animate-spin h-5 w-5" />
+                ) : (
+                  <BotIcon className="h-5 w-5" />
+                )}
                 รับคำแนะนำเนื้อหาจาก AI
               </Button>
             </div>
