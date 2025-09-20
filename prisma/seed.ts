@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 const users = [
   {
     name: "notcis",
+    username: "notcis",
     email: "notcis07@gmail.com",
     password: bcrypt.hashSync("49310407", 10),
   },
@@ -14,15 +15,7 @@ const seedData = async () => {
     const createdUser = await prisma.user.create({
       data: user,
     });
-
-    await prisma.account.create({
-      data: {
-        userId: createdUser.id,
-        type: "email",
-        provider: "credentials",
-        providerAccountId: createdUser.id,
-      },
-    });
+    console.log({ createdUser });
   }
 };
 

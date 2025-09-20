@@ -44,3 +44,12 @@ npm install prisma --save-dev
 npm i dotenv
 
 npx tsx prisma/seed.ts
+
+npm i bcryptjs
+
+npm i deep-email-validator --save
+
+npm install jsonwebtoken
+npm install --save @types/jsonwebtoken
+
+npm i nanoid
