@@ -1,6 +1,10 @@
 "use client";
 
-import { authCheckAction, loginOrRegisterAction } from "@/actions/auth.action";
+import {
+  authCheckAction,
+  loginOrRegisterAction,
+  logoutAction,
+} from "@/actions/auth.action";
 import { UserType } from "@/lib/types";
 import {
   createContext,
@@ -25,6 +29,7 @@ type AuthContextType = {
   handleLoginSubmit: (e: FormEvent<HTMLFormElement>) => void;
   loggedIn: boolean;
   setLoggedIn: Dispatch<SetStateAction<boolean>>;
+  logout: () => Promise<void>;
 };
 
 // Create the AuthContext with an undefined default value
@@ -81,8 +86,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     toast.success(res?.message || "Login successful");
+    setUser(res.user as UserType);
+    setLoggedIn(res.success);
     setLoading(false);
     setLoginModalOpen(false);
+  };
+
+  const logout = async () => {
+    const res = await logoutAction();
+    if (!res?.success) {
+      toast.error(res?.message || "Something went wrong");
+      return;
+    }
+    setUser(initialUserState);
+    setLoggedIn(false);
+    toast.success(res?.message || "Logout successful");
   };
   return (
     <AuthContext.Provider
@@ -96,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleLoginSubmit,
         loggedIn,
         setLoggedIn,
+        logout,
       }}
     >
       {children}

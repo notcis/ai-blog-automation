@@ -13,5 +13,5 @@ export interface UserType {
 export interface AuthResponseType {
   success: boolean;
   message: string;
-  user?: Partial<UserType>;
+  user?: Partial<UserType>; // Make user optional
 }

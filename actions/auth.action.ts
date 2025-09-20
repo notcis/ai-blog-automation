@@ -105,3 +105,14 @@ export const loginOrRegisterAction = async (
     user: { email, name, username, role },
   };
 };
+
+export const logoutAction = async () => {
+  const cookiestore = await cookies();
+  const hasCookie = cookiestore.has("auth");
+  if (hasCookie) {
+    cookiestore.delete("auth");
+    return { success: true, message: "Logged out successfully" };
+  } else {
+    return { success: false, message: "No active session found" };
+  }
+};
