@@ -53,3 +53,5 @@ npm install jsonwebtoken
 npm install --save @types/jsonwebtoken
 
 npm i nanoid
+
+npm i slugify

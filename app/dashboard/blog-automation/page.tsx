@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import Image from "next/image";
 import { generateContentAi } from "@/actions/googleAi";
-import { BotIcon, Loader2Icon } from "lucide-react";
+import { BotIcon, Loader2Icon, SendIcon } from "lucide-react";
 import { toast } from "sonner";
+import { createBlogDb, getBlogById, updateBlogDb } from "@/actions/blog.action";
+import { generateImageUnsplash } from "@/actions/unsplash";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function BlogAutomationPage() {
   const [category, setCategory] = useState<string>("");
@@ -23,6 +26,25 @@ export default function BlogAutomationPage() {
     status: false,
   });
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    if (id) {
+      getBlogById(id).then((blog) => {
+        if (blog) {
+          setCategory(blog.category || "");
+          setTitle(blog.title || "");
+          setContent(blog.content || "");
+          if (blog.imageUrl) {
+            setImage(blog.imageUrl);
+          }
+        }
+      });
+    }
+  }, [id]);
+
   const generateCategories = async () => {
     setLoading({ name: "categories", status: true });
 
@@ -34,6 +56,7 @@ export default function BlogAutomationPage() {
       setSuggestedCategories(categories || []);
     } catch (error) {
       console.log("Error generating categories:", error);
+      toast.error("ไม่สามารถสร้างหมวดหมู่ได้");
     } finally {
       setLoading({ name: "categories", status: false });
     }
@@ -55,14 +78,15 @@ export default function BlogAutomationPage() {
       setSuggestedTitles(titles || []);
     } catch (error) {
       console.log("Error generating titles:", error);
+      toast.error("ไม่สามารถสร้างชื่อเรื่องได้");
     } finally {
       setLoading({ name: "titles", status: false });
     }
   };
 
   const generateContent = async () => {
-    if (!title) {
-      toast.error("กรุณาใส่ชื่อเรื่องก่อน");
+    if (!title || !category) {
+      toast.error("กรุณาใส่ชื่อเรื่องและหมวดหมู่ก่อน");
       return;
     }
     setLoading({ name: "content", status: true });
@@ -80,17 +104,79 @@ export default function BlogAutomationPage() {
       setContent(content || "");
     } catch (error) {
       console.log("Error generating content:", error);
+      toast.error("ไม่สามารถสร้างเนื้อหาได้");
     } finally {
       setLoading({ name: "content", status: false });
     }
   };
 
   const generateImage = async () => {
-    setImage("https://placehold.co/600x600/png");
+    if (!title || !category || !content) {
+      toast.error("กรุณาใส่ชื่อเรื่องและหมวดหมู่และเนื้อหาก่อน");
+      return;
+    }
+    setLoading({ name: "image", status: true });
+    try {
+      const imageUrl = await generateImageUnsplash(title);
+      setImage(imageUrl);
+    } catch (error) {
+      console.log("Error generating image:", error);
+      toast.error("ไม่สามารถสร้างภาพได้");
+    } finally {
+      setLoading({ name: "image", status: false });
+    }
   };
 
   const handleSubmit = async () => {
-    console.log({ category, title, content, image });
+    if (!category || !title || !content || !image) {
+      toast.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return;
+    }
+
+    setLoading({ name: "saving", status: true });
+
+    if (id) {
+      const res = await updateBlogDb(id, {
+        title,
+        category,
+        content,
+        imageUrl: image,
+      });
+      if (!res.success) {
+        toast.error(res.message || "Error updating blog");
+        setLoading({ name: "saving", status: false });
+        return;
+      }
+      toast.success(res.message || "Blog updated successfully");
+      setLoading({ name: "saving", status: false });
+      setCategory("");
+      setTitle("");
+      setContent("");
+      setImage("");
+      setSuggestedCategories([]);
+      setSuggestedTitles([]);
+      router.push("/dashboard");
+    } else {
+      const res = await createBlogDb({
+        title,
+        category,
+        content,
+        imageUrl: image,
+      });
+      if (!res.success) {
+        toast.error(res.message || "Error creating blog");
+        setLoading({ name: "saving", status: false });
+        return;
+      }
+      toast.success(res.message || "Blog created successfully");
+      setLoading({ name: "saving", status: false });
+      setCategory("");
+      setTitle("");
+      setContent("");
+      setImage("");
+      setSuggestedCategories([]);
+      setSuggestedTitles([]);
+    }
   };
   return (
     <div>
@@ -212,7 +298,13 @@ export default function BlogAutomationPage() {
                 className="flex-1"
                 onClick={generateImage}
                 variant="outline"
+                disabled={loading.status && loading.name === "image"}
               >
+                {loading.status && loading.name === "image" ? (
+                  <Loader2Icon className="animate-spin h-5 w-5" />
+                ) : (
+                  <BotIcon className="h-5 w-5" />
+                )}
                 รับคำแนะนำภาพฟีเจอร์จาก AI
               </Button>
               {image && (
@@ -229,7 +321,16 @@ export default function BlogAutomationPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Button onClick={handleSubmit} className="flex-1">
+            <Button
+              disabled={loading.name === "saving" && loading.status}
+              onClick={handleSubmit}
+              className="flex-1"
+            >
+              {loading.name === "saving" && loading.status ? (
+                <Loader2Icon className="animate-spin h-5 w-5" />
+              ) : (
+                <SendIcon className="h-5 w-5" />
+              )}
               บันทึกโพสต์
             </Button>
           </div>

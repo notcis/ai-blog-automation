@@ -15,3 +15,17 @@ export interface AuthResponseType {
   message: string;
   user?: Partial<UserType>; // Make user optional
 }
+
+export interface BlogType {
+  id?: string;
+  user?: Partial<UserType>;
+  title: string;
+  content: string;
+  category: string;
+  excerpt?: string;
+  imageUrl?: string;
+  published?: boolean;
+  slug?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
