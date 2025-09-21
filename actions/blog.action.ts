@@ -124,3 +124,54 @@ export const updateBlogDb = async (id: string, data: BlogType) => {
     };
   }
 };
+
+export const getUserBlogsDb = async (page: number, limit: number) => {
+  const { user } = await authCheckAction();
+  if (!user?.id) {
+    return {
+      data: [],
+      pagination: { total: 0, page: 1 },
+    };
+  }
+
+  const [blogs, totalBlogs] = await Promise.all([
+    prisma.blog.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.blog.count({
+      where: { userId: user.id },
+    }),
+  ]);
+
+  return {
+    data: blogs,
+    pagination: {
+      total: totalBlogs,
+      page,
+    },
+  };
+};
+
+export const getAllBlogsDb = async (page: number, limit: number) => {
+  const [blogs, totalBlogs] = await Promise.all([
+    prisma.blog.findMany({
+      where: { published: true },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.blog.count({
+      where: { published: true },
+    }),
+  ]);
+  return {
+    data: blogs,
+    pagination: {
+      total: totalBlogs,
+      page,
+    },
+  };
+};

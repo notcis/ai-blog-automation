@@ -97,7 +97,7 @@ export default function BlogAutomationPage() {
           language suitable for broad audience. Ensure the content
           is human-friendly and engaging while incorporating relevant
           SEO keywords. Please return the response in JSON format like this:  { "content": "Your blog post content goes here..." } in Thai language.
-          Content must be written in semantic HTML format including multiple headings, bullet points, paragraphs, etc but exclude <DOCTYPE> <html> <head> <header> <meta> section and use <code> blocks as needed only.
+          Content must be written in semantic HTML format including multiple headings, bullet points, paragraphs, etc but exclude <DOCTYPE> <html> <head> <header> <meta> <h1> sections and use <code> blocks as needed only.
           Include summary section at the end of the content but do not include keywords: section at the end.
         `
       );
