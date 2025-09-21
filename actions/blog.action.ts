@@ -130,7 +130,7 @@ export const getUserBlogsDb = async (page: number, limit: number) => {
   if (!user?.id) {
     return {
       data: [],
-      pagination: { total: 0, page: 1 },
+      pagination: { total: 0, page: 1, totalPages: 0 },
     };
   }
 
@@ -140,6 +140,11 @@ export const getUserBlogsDb = async (page: number, limit: number) => {
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        user: {
+          select: { name: true },
+        },
+      },
     }),
     prisma.blog.count({
       where: { userId: user.id },
@@ -151,6 +156,7 @@ export const getUserBlogsDb = async (page: number, limit: number) => {
     pagination: {
       total: totalBlogs,
       page,
+      totalPages: Math.ceil(totalBlogs / limit),
     },
   };
 };
@@ -172,6 +178,7 @@ export const getAllBlogsDb = async (page: number, limit: number) => {
     pagination: {
       total: totalBlogs,
       page,
+      totalPages: Math.ceil(totalBlogs / limit),
     },
   };
 };

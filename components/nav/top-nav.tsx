@@ -52,7 +52,7 @@ export default function TopNav() {
           </Button>
         )}
 
-        <Link href="/dashboard/blog-automation">Blog Automation</Link>
+        <a href="/dashboard/blog-automation">Blog Automation</a>
         <ModeToggle />
       </nav>
       <nav>
