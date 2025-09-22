@@ -180,3 +180,23 @@ export const getBlogBySlugFromDb = async (slug: string) => {
   });
   return blog;
 };
+
+export const searchBlogsDb = async (query: string) => {
+  if (!query || query.trim() === "") {
+    return [];
+  }
+  const blogs = await prisma.blog.findMany({
+    where: {
+      published: true,
+      OR: [{ title: { contains: query } }, { content: { contains: query } }],
+    },
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    include: {
+      user: {
+        select: { name: true },
+      },
+    },
+  });
+  return blogs;
+};

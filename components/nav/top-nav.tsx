@@ -22,13 +22,17 @@ export default function TopNav() {
     useAuthContext();
   return (
     <div>
-      <nav className=" flex justify-between items-center m-2 border-b-2">
+      <nav className=" flex flex-col items-center space-y-2.5 sm:space-y-0 sm:flex-row sm:justify-between sm:items-center m-2 p-2 border-b-2">
         <Link href="/">
           <Image src="/logo.svg" alt="Logo" width={50} height={50} />
         </Link>
 
         <Link href="/blogs">
           <Button variant="outline">Blogs</Button>
+        </Link>
+
+        <Link href="/search">
+          <Button variant="outline">Search</Button>
         </Link>
 
         {loggedIn ? (
@@ -56,7 +60,9 @@ export default function TopNav() {
           </Button>
         )}
 
-        <a href="/dashboard/blog-automation">Blog Automation</a>
+        <a href="/dashboard/blog-automation">
+          <Button variant="outline">Blog Automation</Button>
+        </a>
         <ModeToggle />
       </nav>
       <nav>

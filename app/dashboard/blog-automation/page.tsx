@@ -189,16 +189,16 @@ export default function BlogAutomationPage() {
         <CardHeader>
           <CardTitle>สร้างโพสต์</CardTitle>
         </CardHeader>
-        <CardContent className=" space-y-6">
-          <div className=" space-y-2">
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
             <Label htmlFor="category">หมวดหมู่</Label>
-            <div className=" flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <Input
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder=""
-                className=" flex-1"
+                className="md:flex-1"
               />
               <Button
                 onClick={generateCategories}
@@ -228,13 +228,13 @@ export default function BlogAutomationPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="title">ชื่อเรื่อง</Label>
-            <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter blog title"
-                className=" flex-1"
+                className=" md:flex-1"
               />
               <Button
                 onClick={generateTitles}
