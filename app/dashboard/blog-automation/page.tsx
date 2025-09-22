@@ -92,13 +92,18 @@ export default function BlogAutomationPage() {
     setLoading({ name: "content", status: true });
     try {
       const { content } = await generateContentAi(
-        ` Generate an SEO-optimized blog post for the topic: "${title}".
-          The post should be written in a clear, easy-to-understand
-          language suitable for broad audience. Ensure the content
-          is human-friendly and engaging while incorporating relevant
-          SEO keywords. Please return the response in JSON format like this:  { "content": "Your blog post content goes here..." } in Thai language.
-          Content must be written in semantic HTML format including multiple headings, bullet points, paragraphs, etc but exclude <DOCTYPE> <html> <head> <header> <meta> <h1> sections and use <code> blocks as needed only.
-          Include summary section at the end of the content but do not include keywords: section at the end.
+        ` Write an SEO-optimized blog post on the topic: "${title}".
+          The content must:
+          - Use semantic HTML for structuring, including headings (<h2>,
+            <h3>), paragraphs (<p>), bullet points (<ul>, <li>), and <code> blocks
+            only where relevant.
+          - Exclude <DOCTYPE>, <html>, <body>, <head>, <header>, <nav>,
+            <footer>, <article>, <section>, <main>, and <h1> tags.
+          - Include a summary section at the end but no "keywords" section.
+            Return the response in JSON format like this: { "content": "Your
+            blog post content here." }.
+            Do not add any navigation menus, copyright footers, or unnecessary
+            elements. The content should be in Thai language.
         `
       );
       setContent(content || "");

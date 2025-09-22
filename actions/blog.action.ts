@@ -4,26 +4,7 @@ import { BlogType } from "@/lib/types";
 import { authCheckAction } from "./auth.action";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-
-// Generate excerpt from content
-const generateExcerpt = async (content: string) => {
-  const maxLength = 160;
-  return content.length > maxLength
-    ? content.slice(0, maxLength) + "..."
-    : content;
-};
-
-// Create slug from title
-const createSlug = (text: string) => {
-  if (!text) return "";
-  // normalize to decompose accents if any
-  const normalized = text.normalize("NFKD");
-  // remove characters that are NOT letters, numbers, spaces or hyphens (Unicode-aware)
-  const cleaned = normalized.replace(/[^\p{L}\p{N}\s-]+/gu, "");
-  // collapse spaces to single hyphen, trim extra hyphens
-  const slug = cleaned.trim().replace(/\s+/g, "-").replace(/-+/g, "-");
-  return slug.toLowerCase();
-};
+import { createSlug, generateExcerpt } from "@/lib/utils";
 
 // Create a new blog post
 export const createBlogDb = async (data: BlogType) => {
@@ -168,6 +149,11 @@ export const getAllBlogsDb = async (page: number, limit: number) => {
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit,
+      include: {
+        user: {
+          select: { name: true },
+        },
+      },
     }),
     prisma.blog.count({
       where: { published: true },
@@ -181,4 +167,11 @@ export const getAllBlogsDb = async (page: number, limit: number) => {
       totalPages: Math.ceil(totalBlogs / limit),
     },
   };
+};
+
+export const getBlogBySlugFromDb = async (slug: string) => {
+  const blog = await prisma.blog.findUnique({
+    where: { slug },
+  });
+  return blog;
 };

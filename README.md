@@ -55,3 +55,7 @@ npm install --save @types/jsonwebtoken
 npm i nanoid
 
 npm i slugify
+
+แก้ params ภาษาไทย
+encodeURIComponent
+decodeURIComponent

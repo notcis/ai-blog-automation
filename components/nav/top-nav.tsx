@@ -27,6 +27,10 @@ export default function TopNav() {
           <Image src="/logo.svg" alt="Logo" width={50} height={50} />
         </Link>
 
+        <Link href="/blogs">
+          <Button variant="outline">Blogs</Button>
+        </Link>
+
         {loggedIn ? (
           <DropdownMenu>
             <DropdownMenuTrigger>

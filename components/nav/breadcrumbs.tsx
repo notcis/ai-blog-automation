@@ -28,7 +28,7 @@ export default function Breadcrumbs() {
           <React.Fragment key={index}>
             <ChevronRightIcon size={16} />
             <Link href={href} className="hover:underline capitalize">
-              {segment.replace(/-/g, " ")}
+              {decodeURIComponent(segment).replace(/-/g, " ")}
             </Link>
           </React.Fragment>
         );
