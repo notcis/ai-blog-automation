@@ -1,4 +1,6 @@
 import { getBlogBySlugFromDb } from "@/actions/blog.action";
+import BlogView from "@/components/blog/blog-view";
+import { BlogType } from "@/lib/types";
 import { stripeHtmlAndTruncate } from "@/lib/utils";
 
 export async function generateMetadata({
@@ -54,5 +56,13 @@ export default async function BlogDetailPage({
     return <div>Blog not found</div>;
   }
 
-  return <div>{blog.title}</div>;
+  return (
+    <div className=" container mx-auto px-4 py-8 md:mt-0">
+      <div className=" flex flex-col md:flex-row justify-center items-start gap-8">
+        <div className=" w-full">
+          <BlogView blog={blog as BlogType} />
+        </div>
+      </div>
+    </div>
+  );
 }

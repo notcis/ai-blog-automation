@@ -35,27 +35,60 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+```bash
 npm i @uiw/react-md-editor
+```
 
+```bash
 npm install @google/genai
+```
 
+```bash
 npm install prisma --save-dev
+```
 
+```bash
 npm i dotenv
+```
 
+```bash
 npx tsx prisma/seed.ts
+```
 
+```bash
 npm i bcryptjs
+```
 
+```bash
 npm i deep-email-validator --save
+```
 
+```bash
 npm install jsonwebtoken
 npm install --save @types/jsonwebtoken
+```
 
+```bash
 npm i nanoid
+```
 
+```bash
 npm i slugify
+```
 
 แก้ params ภาษาไทย
+
+```bash
 encodeURIComponent
 decodeURIComponent
+```
+
+```bash
+npm install dayjs
+npm i reading-time
+```
+
+```bash
+npm install -D @tailwindcss/typography
+style.css + @plugin "@tailwindcss/typography";
+```
