@@ -36,7 +36,7 @@ export default function BlogLike({ blog }: { blog: BlogType }) {
     }
     setLikes((prevLikes) =>
       res.liked
-        ? [...prevLikes, { userId: user!.id!, blogId: blog.id! }]
+        ? [...prevLikes, { userId: user.id! }]
         : prevLikes.filter((like) => like.userId !== user!.id)
     );
     if (res.liked) {
