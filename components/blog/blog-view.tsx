@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 
 // import relativeTime plugin
 import relativeTime from "dayjs/plugin/relativeTime";
+import BlogLike from "./blog-like";
 
 // extend dayjs with relativeTime plugin
 dayjs.extend(relativeTime);
@@ -37,6 +38,7 @@ export default function BlogView({ blog }: { blog: BlogType }) {
         </div>
       </CardHeader>
       <div className=" flex flex-wrap justify-center gap-4 mx-4 my-4 sm:mx-10 text-sm">
+        <BlogLike blog={blog} />
         <Button disabled variant="outline" className=" rounded-full">
           {timeToRead.text}
         </Button>

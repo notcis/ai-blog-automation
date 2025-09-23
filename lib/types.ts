@@ -28,4 +28,12 @@ export interface BlogType {
   slug?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  Like?: Partial<LikeType[]>; // Array of LikeType
+}
+
+export interface LikeType {
+  id?: string;
+  userId: string;
+  blogId: string;
+  createdAt?: Date;
 }

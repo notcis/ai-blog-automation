@@ -27,6 +27,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Blog      Blog[]
+  Like      Like[]
 }
 
 model Blog {
@@ -43,5 +44,19 @@ model Blog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  user User   @relation(fields: [userId], references: [id])
+  Like Like[]
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  blogId String
+
+  createdAt DateTime @default(now())
+
   user User @relation(fields: [userId], references: [id])
+  blog Blog @relation(fields: [blogId], references: [id])
+
+  @@unique([userId, blogId], name: "user_blog_unique")
 }

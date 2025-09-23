@@ -176,6 +176,7 @@ export const getBlogBySlugFromDb = async (slug: string) => {
       user: {
         select: { name: true },
       },
+      Like: true,
     },
   });
   return blog;
@@ -199,4 +200,64 @@ export const searchBlogsDb = async (query: string) => {
     },
   });
   return blogs;
+};
+
+export const toggleBlogLikeDb = async (blogId: string) => {
+  const { user } = await authCheckAction();
+  if (!user?.id) {
+    return {
+      success: false,
+      message: "Unauthorized",
+    };
+  }
+
+  // Check if blog exists
+  const blog = await prisma.blog.findUnique({
+    where: { id: blogId },
+  });
+
+  if (!blog) {
+    return {
+      success: false,
+      message: "Blog not found",
+    };
+  }
+
+  // Check if user already liked the blog
+  const alreadyLiked = await prisma.like.findUnique({
+    where: { user_blog_unique: { userId: user.id, blogId: blog.id } },
+  });
+
+  try {
+    // If already liked, remove the like, else add a like
+    if (alreadyLiked) {
+      const updatedBlog = await prisma.like.delete({
+        where: { user_blog_unique: { userId: user.id, blogId: blog.id } },
+      });
+      return {
+        success: true,
+        message: "Like removed",
+        liked: false,
+        likes: updatedBlog,
+      };
+    }
+    // Not liked yet, add a like
+    else {
+      const updatedBlog = await prisma.like.create({
+        data: { userId: user.id, blogId: blog.id },
+      });
+      return {
+        success: true,
+        message: "Blog liked",
+        liked: true,
+        likes: updatedBlog,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Error toggling like",
+    };
+  }
 };
