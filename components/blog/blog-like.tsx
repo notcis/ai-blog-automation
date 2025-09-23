@@ -10,10 +10,18 @@ import { toggleBlogLikeDb } from "@/actions/blog.action";
 
 export default function BlogLike({ blog }: { blog: BlogType }) {
   const { user, loggedIn } = useAuthContext(); // context
-  const [likes, setLikes] = useState(blog?.Like);
+  const [likes, setLikes] = useState<LikeType[]>(
+    Array.isArray(blog?.Like)
+      ? blog!.Like.filter((l): l is LikeType => Boolean(l))
+      : []
+  ); // likes state
   const [loading, setLoading] = useState(false);
 
-  const liked = user.id && likes?.some((like) => like?.userId === user.id);
+  const liked = Boolean(
+    user?.id &&
+      Array.isArray(likes) &&
+      likes.some((like) => like?.userId === user.id)
+  );
 
   const handleLike = async () => {
     if (!loggedIn) {
@@ -32,11 +40,15 @@ export default function BlogLike({ blog }: { blog: BlogType }) {
       setLoading(false);
       return;
     }
-    setLikes(res.likes as LikeType[] | undefined);
+    setLikes((prevLikes) =>
+      res.liked
+        ? [...prevLikes, { userId: user!.id!, blogId: blog.id! }]
+        : prevLikes.filter((like) => like.userId !== user!.id)
+    );
     if (res.liked) {
       toast.success("คุณได้กดไลค์บทความนี้แล้ว");
     } else {
-      toast.success("คุณได้ยกเลิกการกดไลค์บทความนี้แล้ว");
+      toast.error("คุณได้ยกเลิกการกดไลค์บทความนี้แล้ว");
     }
     setLoading(false);
   };

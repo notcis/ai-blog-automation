@@ -1,3 +1,5 @@
+"use client";
+
 import { BlogType } from "@/lib/types";
 import readingTime from "reading-time";
 import { Card, CardContent, CardHeader } from "../ui/card";
