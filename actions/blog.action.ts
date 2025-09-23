@@ -238,7 +238,7 @@ export const toggleBlogLikeDb = async (blogId: string) => {
         success: true,
         message: "Like removed",
         liked: false,
-        likes: updatedBlog,
+        likes: [updatedBlog],
       };
     }
     // Not liked yet, add a like
@@ -250,7 +250,7 @@ export const toggleBlogLikeDb = async (blogId: string) => {
         success: true,
         message: "Blog liked",
         liked: true,
-        likes: updatedBlog,
+        likes: [updatedBlog],
       };
     }
   } catch (error) {

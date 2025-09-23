@@ -11,17 +11,11 @@ import { toggleBlogLikeDb } from "@/actions/blog.action";
 export default function BlogLike({ blog }: { blog: BlogType }) {
   const { user, loggedIn } = useAuthContext(); // context
   const [likes, setLikes] = useState<LikeType[]>(
-    Array.isArray(blog?.Like)
-      ? blog!.Like.filter((l): l is LikeType => Boolean(l))
-      : []
+    blog?.Like ? blog!.Like.filter((l): l is LikeType => Boolean(l)) : []
   ); // likes state
   const [loading, setLoading] = useState(false);
 
-  const liked = Boolean(
-    user?.id &&
-      Array.isArray(likes) &&
-      likes.some((like) => like?.userId === user.id)
-  );
+  const liked = user?.id && likes.some((like) => like?.userId === user.id);
 
   const handleLike = async () => {
     if (!loggedIn) {

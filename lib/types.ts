@@ -34,6 +34,6 @@ export interface BlogType {
 export interface LikeType {
   id?: string;
   userId: string;
-  blogId: string;
+  blogId?: string;
   createdAt?: Date;
 }
