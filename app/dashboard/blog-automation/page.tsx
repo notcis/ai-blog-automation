@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { createBlogDb, getBlogById, updateBlogDb } from "@/actions/blog.action";
 import { generateImageUnsplash } from "@/actions/unsplash";
 import { useRouter, useSearchParams } from "next/navigation";
+import { generateContentLc } from "@/actions/langchain";
 
 export default function BlogAutomationPage() {
   const [category, setCategory] = useState<string>("");
@@ -49,7 +50,7 @@ export default function BlogAutomationPage() {
     setLoading({ name: "categories", status: true });
 
     try {
-      const { categories } = await generateContentAi(
+      const { categories } = await generateContentLc(
         `Suggest 10 of the most popular and relevant categories for the blogging application. 
         Please return the response in JSON format like this:  { "categories": ["เทคโนโลยี", "สุขภาพ", "การเดินทาง"] } in Thai language.`
       );
@@ -70,7 +71,7 @@ export default function BlogAutomationPage() {
 
     setLoading({ name: "titles", status: true });
     try {
-      const { titles } = await generateContentAi(
+      const { titles } = await generateContentLc(
         ` Suggest 3 SEO-optimized blog post titles for the category ${category}.
           The titles should be catchy, relevant and designed to attract traffic.
           Please return the response in JSON format like this:  { "titles": ["The Future of AI", "10 Tips for Healthy Living"] } in Thai language.`
@@ -91,7 +92,7 @@ export default function BlogAutomationPage() {
     }
     setLoading({ name: "content", status: true });
     try {
-      const { content } = await generateContentAi(
+      const { content } = await generateContentLc(
         ` Write an SEO-optimized blog post on the topic: "${title}".
           The content must:
           - Use semantic HTML for structuring, including headings (<h2>,
