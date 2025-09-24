@@ -338,7 +338,6 @@ export const togglePublishBlogDb = async (id: string) => {
       data: { published: !blog?.published },
     });
     revalidatePath(`/admin/blogs`);
-    revalidatePath(`/dashboard/blogs`);
 
     return {
       success: true,
