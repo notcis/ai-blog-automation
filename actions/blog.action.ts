@@ -261,3 +261,27 @@ export const toggleBlogLikeDb = async (blogId: string) => {
     };
   }
 };
+
+export const adminGetAllBlogsDb = async (page: number, limit: number) => {
+  const [blogs, totalBlogs] = await Promise.all([
+    prisma.blog.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        user: {
+          select: { name: true },
+        },
+      },
+    }),
+    prisma.blog.count(),
+  ]);
+  return {
+    data: blogs,
+    pagination: {
+      total: totalBlogs,
+      page,
+      totalPages: Math.ceil(totalBlogs / limit),
+    },
+  };
+};

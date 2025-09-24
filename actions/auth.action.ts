@@ -15,7 +15,18 @@ export const authCheckAction = async () => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserType;
-    return { success: true, user: decoded };
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user) {
+      return { success: false, message: "User not found" };
+    }
+
+    const { password, ...rest } = user;
+
+    return { success: true, user: rest };
   } catch (error) {
     console.error("JWT verification failed:", error);
     return { success: false, message: "Invalid token" };
@@ -93,7 +104,7 @@ export const loginOrRegisterAction = async (
   }
 
   // Generate JWT token and set it in HTTP-only cookie
-  const { id, name, username, role } = user;
+  const { id, name, username, role, website, about } = user;
   const token = generateToken({ id, email, name: name || "", username, role });
 
   // Set the auth cookie
@@ -102,7 +113,7 @@ export const loginOrRegisterAction = async (
   return {
     success: true,
     message: "Authentication successful",
-    user: { email, name, username, role },
+    user: { email, name, username, role, website, about },
   };
 };
 

@@ -1,10 +1,11 @@
 import { getAllBlogsDb } from "@/actions/blog.action";
+import FloatingBlogEditButtons from "@/components/admin/flotingblog-editbuttons";
 import BlogCard from "@/components/blog/blog-card";
 import BlogPagination from "@/components/blog/blog-pagination";
 import { BlogType } from "@/lib/types";
 import Link from "next/link";
 
-export default async function BlogsPage({
+export default async function AdminBlogsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: number }>;
@@ -21,13 +22,11 @@ export default async function BlogsPage({
         <br />
         <div className=" grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {data.map((blog) => (
-            <div
-              key={blog.id}
-              className="transform transition duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              <Link href={`/blogs/${encodeURIComponent(blog.slug)}`}>
+            <div key={blog.id} className="relative">
+              <div>
                 <BlogCard blog={blog as BlogType} />
-              </Link>
+              </div>
+              <FloatingBlogEditButtons blogId={blog.id} />
             </div>
           ))}
         </div>

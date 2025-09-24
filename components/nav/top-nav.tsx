@@ -22,7 +22,7 @@ export default function TopNav() {
     useAuthContext();
   return (
     <div>
-      <nav className=" flex flex-col items-center space-y-2.5 sm:space-y-0 sm:flex-row sm:justify-between sm:items-center m-2 p-2 border-b-2">
+      <nav className="flex flex-col items-center space-y-2.5 sm:space-y-0 sm:flex-row sm:justify-start sm:gap-4 sm:items-center m-2 p-2 border-b-2">
         <Link href="/">
           <Image src="/logo.svg" alt="Logo" width={50} height={50} />
         </Link>
@@ -44,9 +44,16 @@ export default function TopNav() {
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel asChild>
-                <Link href="/dashboard">Dashboard</Link>
-              </DropdownMenuLabel>
+              <div className="flex flex-col">
+                <DropdownMenuLabel asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </DropdownMenuLabel>
+                {user.role === "admin" && (
+                  <DropdownMenuLabel asChild>
+                    <Link href="/admin">{user.role}</Link>
+                  </DropdownMenuLabel>
+                )}
+              </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>ออกจากระบบ</DropdownMenuItem>
             </DropdownMenuContent>
@@ -63,7 +70,9 @@ export default function TopNav() {
         <a href="/dashboard/blog-automation">
           <Button variant="outline">Blog Automation</Button>
         </a>
-        <ModeToggle />
+        <div className="sm:ml-auto">
+          <ModeToggle />
+        </div>
       </nav>
       <nav>
         <Breadcrumbs />

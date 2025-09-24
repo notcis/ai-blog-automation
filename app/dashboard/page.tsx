@@ -1,7 +1,9 @@
 import { getUserBlogsDb } from "@/actions/blog.action";
 import BlogCard from "@/components/blog/blog-card";
 import BlogPagination from "@/components/blog/blog-pagination";
+import { Button } from "@/components/ui/button";
 import { BlogType } from "@/lib/types";
+import { FileTextIcon, ThumbsUpIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage({
@@ -14,29 +16,27 @@ export default async function DashboardPage({
 
   const { data, pagination } = await getUserBlogsDb(page, limit);
   return (
-    <div className="md:mt-0">
-      <div className="p-5">
-        <h1 className="text-2xl font-bold">โพสต์ของฉัน</h1>
-        <p className=" text-sm text-gray-500">จำนวนโพสต์: {pagination.total}</p>
-        <br />
-        <div className=" grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {data.map((blog) => (
-            <div
-              key={blog.id}
-              className="transform transition duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              <Link href={`/dashboard/blog-automation?id=${blog.id}`}>
-                <BlogCard blog={blog as BlogType} />
-              </Link>
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-center mt-5">
-          <BlogPagination
-            page={pagination.page}
-            totalPages={pagination.totalPages}
-          />
-        </div>
+    <div className="container mx-auto mt-10">
+      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Link href="/dashboard/blogs">
+          <Button className="w-full h-32 text-xl" variant="outline">
+            <FileTextIcon className="mr-2 h-8 w-8" />
+            Blog Management
+          </Button>
+        </Link>
+        <Link href="/dashboard/profile-update">
+          <Button className="w-full h-32 text-xl" variant="outline">
+            <UsersIcon className="mr-2 h-8 w-8" />
+            Profile Management
+          </Button>
+        </Link>
+        <Link href="/dashboard/liked-blogs">
+          <Button className="w-full h-32 text-xl" variant="outline">
+            <ThumbsUpIcon className="mr-2 h-8 w-8" />
+            Liked Blogs
+          </Button>
+        </Link>
       </div>
     </div>
   );
