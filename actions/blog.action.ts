@@ -1,10 +1,35 @@
 "use server";
 
-import { BlogType } from "@/lib/types";
+import { BlogType, UserType } from "@/lib/types";
 import { authCheckAction } from "./auth.action";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createSlug, generateExcerpt } from "@/lib/utils";
+
+const canEditBlog = (blog: BlogType, user: UserType) => {
+  if (!user.id) {
+    return {
+      success: false,
+      message: "Unauthorized",
+    };
+  }
+  if (!blog.id) {
+    return {
+      success: false,
+      message: "Blog ID is required",
+    };
+  }
+
+  if (
+    blog.user?.id?.toString() !== user.id.toString() &&
+    user.role !== "admin"
+  ) {
+    return {
+      success: false,
+      message: "You do not have permission to edit this blog",
+    };
+  }
+};
 
 // Create a new blog post
 export const createBlogDb = async (data: BlogType) => {
@@ -75,10 +100,17 @@ export const updateBlogDb = async (id: string, data: BlogType) => {
       };
     }
 
+    const blog = await prisma.blog.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+
+    canEditBlog(blog as BlogType, user as UserType);
+
     const excerpt = data.content ? await generateExcerpt(data.content) : null;
     const slug = createSlug(data.title);
 
-    const blog = await prisma.blog.update({
+    const updateBlog = await prisma.blog.update({
       where: { id },
       data: {
         category: data.category,
@@ -95,7 +127,7 @@ export const updateBlogDb = async (id: string, data: BlogType) => {
     return {
       success: true,
       message: "Blog updated successfully",
-      data: blog,
+      data: updateBlog,
     };
   } catch (error) {
     console.log(error);
@@ -284,4 +316,40 @@ export const adminGetAllBlogsDb = async (page: number, limit: number) => {
       totalPages: Math.ceil(totalBlogs / limit),
     },
   };
+};
+
+export const togglePublishBlogDb = async (id: string) => {
+  const { user } = await authCheckAction();
+  if (!user?.id) {
+    return {
+      success: false,
+      message: "Unauthorized",
+    };
+  }
+  const blog = await prisma.blog.findUnique({
+    where: { id },
+    include: { user: true },
+  });
+
+  canEditBlog(blog as BlogType, user as UserType);
+  try {
+    const updatedBlog = await prisma.blog.update({
+      where: { id },
+      data: { published: !blog?.published },
+    });
+    revalidatePath(`/admin/blogs`);
+    revalidatePath(`/dashboard/blogs`);
+
+    return {
+      success: true,
+      message: `Blog ${updatedBlog.published ? "published" : "unpublished"}`,
+      data: updatedBlog,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Error toggling publish status",
+    };
+  }
 };

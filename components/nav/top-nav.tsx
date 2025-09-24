@@ -35,6 +35,9 @@ export default function TopNav() {
           <Button variant="outline">Search</Button>
         </Link>
 
+        <a href="/dashboard/blog-automation">
+          <Button variant="outline">Blog Automation</Button>
+        </a>
         {loggedIn ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -66,10 +69,6 @@ export default function TopNav() {
             เข้าสู่ระบบ
           </Button>
         )}
-
-        <a href="/dashboard/blog-automation">
-          <Button variant="outline">Blog Automation</Button>
-        </a>
         <div className="sm:ml-auto">
           <ModeToggle />
         </div>
