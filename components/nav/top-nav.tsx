@@ -38,38 +38,39 @@ export default function TopNav() {
         <a href="/dashboard/blog-automation">
           <Button variant="outline">Blog Automation</Button>
         </a>
-        {loggedIn ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <span className=" relative border p-2 rounded-md capitalize">
-                {user.name}
-                <span className="absolute top-0.4 right-0.5 h-2 w-2 bg-green-500 rounded-full"></span>
-              </span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <div className="flex flex-col">
-                <DropdownMenuLabel asChild>
-                  <Link href="/dashboard">Dashboard</Link>
-                </DropdownMenuLabel>
-                {user.role === "admin" && (
+
+        <div className="sm:ml-auto flex items-center space-x-2">
+          {loggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <span className=" relative border p-2 rounded-md capitalize">
+                  {user.name}
+                  <span className="absolute top-0.4 right-0.5 h-2 w-2 bg-green-500 rounded-full"></span>
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <div className="flex flex-col">
                   <DropdownMenuLabel asChild>
-                    <Link href="/admin">{user.role}</Link>
+                    <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuLabel>
-                )}
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout}>ออกจากระบบ</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button
-            variant="outline"
-            onClick={() => setLoginModalOpen(!loginModalOpen)}
-          >
-            เข้าสู่ระบบ
-          </Button>
-        )}
-        <div className="sm:ml-auto">
+                  {user.role === "admin" && (
+                    <DropdownMenuLabel asChild>
+                      <Link href="/admin">{user.role}</Link>
+                    </DropdownMenuLabel>
+                  )}
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>ออกจากระบบ</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => setLoginModalOpen(!loginModalOpen)}
+            >
+              เข้าสู่ระบบ
+            </Button>
+          )}
           <ModeToggle />
         </div>
       </nav>
