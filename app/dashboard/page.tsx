@@ -1,20 +1,8 @@
-import { getUserBlogsDb } from "@/actions/blog.action";
-import BlogCard from "@/components/blog/blog-card";
-import BlogPagination from "@/components/blog/blog-pagination";
 import { Button } from "@/components/ui/button";
-import { BlogType } from "@/lib/types";
 import { FileTextIcon, ThumbsUpIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: number }>;
-}) {
-  const page = (await searchParams).page || 1;
-  const limit = 3;
-
-  const { data, pagination } = await getUserBlogsDb(page, limit);
+export default async function DashboardPage() {
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>

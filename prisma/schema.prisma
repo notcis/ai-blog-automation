@@ -28,6 +28,7 @@ model User {
   updatedAt DateTime @updatedAt
   Blog      Blog[]
   Like      Like[]
+  Ticket    Ticket[]
 }
 
 model Blog {
@@ -55,8 +56,22 @@ model Like {
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  blog Blog @relation(fields: [blogId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
 
   @@unique([userId, blogId], name: "user_blog_unique")
+}
+
+model Ticket {
+  id         String @id @default(cuid())
+  userId     String
+  email      String
+  message    String @db.Text
+  ticketType String
+  status     String @default("open")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -37,3 +37,13 @@ export interface LikeType {
   blogId?: string;
   createdAt?: Date;
 }
+
+export interface TicketType {
+  id?: string;
+  email: string;
+  message: string;
+  ticketType: string;
+  status?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

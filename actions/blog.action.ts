@@ -352,3 +352,70 @@ export const togglePublishBlogDb = async (id: string) => {
     };
   }
 };
+
+export const deleteBlogDb = async (id: string) => {
+  const { user } = await authCheckAction();
+  if (!user?.id) {
+    return {
+      success: false,
+      message: "Unauthorized",
+    };
+  }
+  const blog = await prisma.blog.findUnique({
+    where: { id },
+    include: { user: true },
+  });
+  canEditBlog(blog as BlogType, user as UserType);
+  try {
+    await prisma.blog.delete({
+      where: { id },
+    });
+    revalidatePath(`/admin/blogs`);
+    return {
+      success: true,
+      message: "Blog deleted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: "Error deleting blog",
+    };
+  }
+};
+
+export const getLikedBlogsDb = async (page: number, limit: number) => {
+  const { user } = await authCheckAction();
+  if (!user?.id) {
+    return {
+      data: [],
+      pagination: { total: 0, page: 1, totalPages: 0 },
+    };
+  }
+  const [likes, totalLikes] = await Promise.all([
+    prisma.like.findMany({
+      where: { userId: user.id, blog: { published: true } },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        blog: {
+          include: { user: { select: { name: true } } },
+        },
+      },
+    }),
+    prisma.like.count({
+      where: { userId: user.id, blog: { published: true } },
+    }),
+  ]);
+
+  const blogs = likes.map((like) => like.blog);
+  return {
+    data: blogs,
+    pagination: {
+      total: totalLikes,
+      page,
+      totalPages: Math.ceil(totalLikes / limit),
+    },
+  };
+};

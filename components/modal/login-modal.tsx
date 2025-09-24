@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuthContext } from "@/context/auth";
 import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginModal() {
   const {
@@ -21,6 +21,13 @@ export default function LoginModal() {
     setLoginModalOpen,
     handleLoginSubmit,
   } = useAuthContext();
+
+  const router = useRouter();
+
+  const forgotPasswordClick = () => {
+    setLoginModalOpen(false);
+    router.push("/ticket");
+  };
 
   return (
     <Dialog open={loginModalOpen} onOpenChange={setLoginModalOpen}>
@@ -51,16 +58,18 @@ export default function LoginModal() {
             onChange={(e) => setUser({ ...user, password: e.target.value })}
             required
           />
-
-          <Button disabled={loading || !user.email} type="submit">
-            {loading ? (
-              <Loader2Icon className="animate-spin w-4 h-4 mr-2" />
-            ) : null}
-            เข้าสู่ระบบ
-          </Button>
+          <div className="flex justify-end items-center space-x-2">
+            <Button disabled={loading || !user.email} type="submit">
+              {loading ? (
+                <Loader2Icon className="animate-spin w-4 h-4 mr-2" />
+              ) : null}
+              เข้าสู่ระบบ
+            </Button>
+            <Button onClick={forgotPasswordClick} variant="destructive">
+              Forgot Password?
+            </Button>
+          </div>
         </form>
-
-        <DialogFooter></DialogFooter>
       </DialogContent>
     </Dialog>
   );

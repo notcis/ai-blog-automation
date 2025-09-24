@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { togglePublishBlogDb } from "@/actions/blog.action";
+import { deleteBlogDb, togglePublishBlogDb } from "@/actions/blog.action";
 import { toast } from "sonner";
 
 export default function FloatingBlogEditButtons({
@@ -20,6 +20,16 @@ export default function FloatingBlogEditButtons({
     }
     toast.success(res.message);
   };
+
+  const handleDelete = async (blogId: string) => {
+    const res = await deleteBlogDb(blogId);
+    if (!res.success) {
+      toast.error(res.message);
+      return;
+    }
+    toast.success(res.message);
+  };
+
   return (
     <div className="absolute mt-2 top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-3">
       <Button variant="destructive">
@@ -31,7 +41,12 @@ export default function FloatingBlogEditButtons({
       >
         {published ? "Published" : "Not Published"}
       </Button>
-      <Button variant="destructive">Delete</Button>
+      <Button
+        variant="destructive"
+        onClick={() => blogId && handleDelete(blogId)}
+      >
+        Delete
+      </Button>
     </div>
   );
 }
