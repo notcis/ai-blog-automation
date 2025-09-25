@@ -32,11 +32,11 @@ export default function TopNav() {
         </Link>
 
         <Link href="/search">
-          <Button variant="outline">Search</Button>
+          <Button variant="outline">ค้นหา</Button>
         </Link>
 
         <a href="/dashboard/blog-automation">
-          <Button variant="outline">Blog Automation</Button>
+          <Button variant="outline">สร้าง Blog ด้วย AI</Button>
         </a>
 
         <div className="sm:ml-auto flex items-center space-x-2">
@@ -51,11 +51,11 @@ export default function TopNav() {
               <DropdownMenuContent>
                 <div className="flex flex-col">
                   <DropdownMenuLabel asChild>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/dashboard">แดชบอร์ด</Link>
                   </DropdownMenuLabel>
                   {user.role === "admin" && (
                     <DropdownMenuLabel asChild>
-                      <Link href="/admin">{user.role}</Link>
+                      <Link href="/admin">สำหรับผู้ดูแลระบบ</Link>
                     </DropdownMenuLabel>
                   )}
                 </div>

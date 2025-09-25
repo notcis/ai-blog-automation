@@ -44,6 +44,7 @@ export interface TicketType {
   message: string;
   ticketType: string;
   status?: string;
+  user?: Partial<UserType>;
   createdAt?: Date;
   updatedAt?: Date;
 }
