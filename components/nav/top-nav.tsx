@@ -16,13 +16,76 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MenuIcon } from "lucide-react";
 
 export default function TopNav() {
   const { loginModalOpen, setLoginModalOpen, user, loggedIn, logout } =
     useAuthContext();
   return (
     <div>
-      <nav className="flex flex-col items-center space-y-2.5 sm:space-y-0 sm:flex-row sm:justify-start sm:gap-4 sm:items-center m-2 p-2 border-b-2">
+      <nav className="flex justify-end items-center pr-2.5 sm:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant="outline">
+              <MenuIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <Link href="/">Home</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/blogs">Blogs</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/search">ค้นหา</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <a href="/dashboard/blog-automation">สร้าง Blog ด้วย AI</a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <ModeToggle />
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              {loggedIn ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <span className=" relative border p-2 rounded-md capitalize">
+                      {user.name}
+                      <span className="absolute top-0.4 right-0.5 h-2 w-2 bg-green-500 rounded-full"></span>
+                    </span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center">
+                    <div className="flex flex-col">
+                      <DropdownMenuLabel asChild>
+                        <Link href="/dashboard">แดชบอร์ด</Link>
+                      </DropdownMenuLabel>
+                      {user.role === "admin" && (
+                        <DropdownMenuLabel asChild>
+                          <Link href="/admin">สำหรับผู้ดูแลระบบ</Link>
+                        </DropdownMenuLabel>
+                      )}
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout}>
+                      ออกจากระบบ
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => setLoginModalOpen(!loginModalOpen)}
+                >
+                  เข้าสู่ระบบ
+                </Button>
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </nav>
+      <nav className="hidden sm:flex sm:space-y-0 sm:flex-row sm:justify-start sm:gap-4 sm:items-center m-2 p-2 border-b-2">
         <Link href="/">
           <Image src="/logo.svg" alt="Logo" width={50} height={50} />
         </Link>
