@@ -127,3 +127,27 @@ export const logoutAction = async () => {
     return { success: false, message: "No active session found" };
   }
 };
+
+export const adminGetAllUsersDb = async (page: number, limit: number) => {
+  const [users, totalCount] = await Promise.all([
+    prisma.user.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.user.count(),
+  ]);
+
+  return {
+    users: users.map((user) => ({
+      ...user,
+      name: user.name || "",
+      website: user.website || "",
+      about: user.about || "",
+    })),
+    totalCount,
+    pagination: {
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    },
+  };
+};
