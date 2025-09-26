@@ -117,6 +117,7 @@ export const loginOrRegisterAction = async (
   };
 };
 
+// Logout function to clear the auth cookie
 export const logoutAction = async () => {
   const cookiestore = await cookies();
   const hasCookie = cookiestore.has("auth");
@@ -128,6 +129,7 @@ export const logoutAction = async () => {
   }
 };
 
+// Admin function to get all users with pagination
 export const adminGetAllUsersDb = async (page: number, limit: number) => {
   const [users, totalCount] = await Promise.all([
     prisma.user.findMany({
@@ -150,4 +152,12 @@ export const adminGetAllUsersDb = async (page: number, limit: number) => {
       totalPages: Math.ceil(totalCount / limit),
     },
   };
+};
+
+export const getUserByUsernameDb = async (username: string) => {
+  const user = await prisma.user.findUnique({
+    where: { username },
+  });
+
+  return user;
 };

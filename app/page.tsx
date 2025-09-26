@@ -19,30 +19,30 @@ export default function LandingPage() {
                   className="text-3xl font-bold tracking-tighter
 sm:text-4xl md:text-5xl lg:text-6xl"
                 >
-                  Create Stunning Blogs in Seconds with AI
+                  สร้างบล็อก SEO ด้วย AI ในไม่กี่คลิก
                 </h1>
                 <p
                   className="mx-auto max-w-3xl text-gray-500 md:text-xl
 dark:text-gray-400"
                 >
-                  Revolutionize your content creation with our AI-powered blog
-                  automation platform. Generate SEO-optimized blogs with just a
-                  few clicks.
+                  ปฏิวัติการสร้างเนื้อหาของคุณด้วยแพลตฟอร์มบล็อกอัตโนมัติที่ขับเคลื่อนด้วย
+                  AI ของเรา สร้างหัวข้อที่น่าสนใจ หัวเรื่อง
+                  และเนื้อหาบล็อกที่เหมาะกับ SEO ได้อย่างรวดเร็วและง่ายดาย
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
                   <Input
                     className="max-w-lg flex-1"
-                    placeholder="It's completely free!"
+                    placeholder="ฟรีทั้งหมด!"
                     disabled
                   />
                   <Link href="/dashboard/blog-automation">
-                    <Button type="submit">Get Started</Button>
+                    <Button type="submit">เริ่มต้นใช้งาน</Button>
                   </Link>
                 </form>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Get your unique URL and start blogging instantly.
+                  รับ URL เฉพาะของคุณและเริ่มบล็อกได้ทันที
                 </p>
               </div>
             </div>
@@ -193,15 +193,14 @@ space-y-4 text-center"
                   className="text-3xl font-bold tracking-tighter
 sm:text-5xl"
                 >
-                  Start Blogging in Seconds
+                  เริ่มต้นใช้งานกับ AI Blog Automation วันนี้
                 </h2>
                 <p
                   className="max-w-3xl text-gray-500 md:text-xl
 dark:text-gray-400"
                 >
-                  Join thousands of business owners who are revolutionizing
-                  their content creation with us. Create engaging, SEOoptimized
-                  content faster than ever before.
+                  ลองใช้แพลตฟอร์มบล็อกอัตโนมัติที่ขับเคลื่อนด้วย AI
+                  ของเราและดูว่าเนื้อหาของคุณจะเปลี่ยนไปอย่างไร
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
@@ -212,7 +211,7 @@ dark:text-gray-400"
                     disabled
                   />
                   <Link href="/dashboard/blog-automation">
-                    <Button type="submit">Get Started</Button>
+                    <Button type="submit">เริ่มต้นใช้งาน</Button>
                   </Link>
                 </form>
               </div>

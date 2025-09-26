@@ -205,9 +205,7 @@ export const getBlogBySlugFromDb = async (slug: string) => {
   const blog = await prisma.blog.findUnique({
     where: { slug },
     include: {
-      user: {
-        select: { name: true },
-      },
+      user: true,
       Like: true,
     },
   });

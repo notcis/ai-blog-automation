@@ -1,5 +1,6 @@
 import { adminGetAllUsersDb } from "@/actions/auth.action";
 import BlogPagination from "@/components/blog/blog-pagination";
+import UserCard from "@/components/user/user-card";
 import { UserType } from "@/lib/types";
 
 export default async function UsersPage({
@@ -27,8 +28,7 @@ export default async function UsersPage({
           {users.map((user: UserType) => {
             return (
               <div key={user.id} className="relative">
-                {/* <UserCard user={user} /> */}
-                <pre>{JSON.stringify(user, null, 2)}</pre>
+                <UserCard user={user} />
               </div>
             );
           })}

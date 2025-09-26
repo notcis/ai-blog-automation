@@ -1,6 +1,7 @@
 import { getBlogBySlugFromDb } from "@/actions/blog.action";
 import BlogView from "@/components/blog/blog-view";
-import { BlogType } from "@/lib/types";
+import UserCard from "@/components/user/user-card";
+import { BlogType, UserType } from "@/lib/types";
 import { stripeHtmlAndTruncate } from "@/lib/utils";
 
 export async function generateMetadata({
@@ -57,10 +58,20 @@ export default async function BlogDetailPage({
   }
 
   return (
-    <div className=" container mx-auto px-4 py-8 md:mt-0">
-      <div className=" flex flex-col md:flex-row justify-center items-start gap-8">
-        <div className=" w-full">
+    <div className="container mx-auto px-4 py-8 md:mt-0">
+      <div
+        className="flex flex-col md:flex-row justify-center items-start
+gap-8"
+      >
+        {/* Main blog content */}
+        <div className="w-full">
           <BlogView blog={blog as BlogType} />
+          <div className="flex justify-end py-10 w-full max-w-4xl mx-auto">
+            <div>
+              <h3 className="text-lg mb-2 ml-1">เกี่ยวกับผู้เขียน</h3>
+              <UserCard user={blog.user as UserType} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
