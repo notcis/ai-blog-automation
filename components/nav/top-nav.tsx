@@ -41,7 +41,7 @@ export default function TopNav() {
               <Link href="/search">ค้นหา</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <a href="/dashboard/blog-automation">สร้าง Blog ด้วย AI</a>
+              <Link href="/dashboard/blog-automation">สร้าง Blog ด้วย AI</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             {loggedIn ? (
@@ -90,9 +90,9 @@ export default function TopNav() {
           <Button variant="outline">ค้นหา</Button>
         </Link>
 
-        <a href="/dashboard/blog-automation">
+        <Link href="/dashboard/blog-automation">
           <Button variant="outline">สร้าง Blog ด้วย AI</Button>
-        </a>
+        </Link>
 
         <div className="sm:ml-auto flex items-center space-x-2">
           {loggedIn ? (

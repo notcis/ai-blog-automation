@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import Image from "next/image";
-import { generateContentAi } from "@/actions/googleAi";
 import { BotIcon, Loader2Icon, SendIcon } from "lucide-react";
 import { toast } from "sonner";
 import { createBlogDb, getBlogById, updateBlogDb } from "@/actions/blog.action";
@@ -43,6 +42,13 @@ export default function BlogAutomationPage() {
           }
         }
       });
+    } else {
+      setCategory("");
+      setTitle("");
+      setContent("");
+      setImage("");
+      setSuggestedCategories([]);
+      setSuggestedTitles([]);
     }
   }, [id]);
 
